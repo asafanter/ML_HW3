@@ -110,6 +110,10 @@ def prepareData(data_path: str) -> (pd.DataFrame, pd.DataFrame, pd.DataFrame):
     :return: training set, validation set and test set
     """
     df = pd.read_csv(data_path)
+    df = df[['Vote', 'Most_Important_Issue', 'Avg_monthly_expense_on_pets_or_plants', 'Avg_environmental_importance',
+             'Avg_Residancy_Altitude', 'Yearly_ExpensesK', 'Avg_government_satisfaction', 'Weighted_education_rank',
+             'Number_of_valued_Kneset_members', 'Avg_education_importance']]
+
     df, training_set, validation_set, test_set = split_data(df)
     save_split_data(df, training_set, validation_set, test_set, 'Original_data')
 
@@ -142,3 +146,6 @@ if __name__ == '__main__':
     training, validation, test = readSets('Prepared_data')
 
     print(training.shape)
+    print(validation.shape)
+    print(test.shape)
+
