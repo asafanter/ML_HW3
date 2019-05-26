@@ -4,9 +4,10 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 
 
 ########################################################################################################################
@@ -49,7 +50,8 @@ def read_sets(dir_path: str) -> (pd.DataFrame, pd.DataFrame, pd.DataFrame):
 
 
 ########################################################################################################################
-# STEP 2: train models
+# STEP 2: train different models with cross validation and only on the training set, on order to tune the
+#         hyper-parameters of each model.
 ########################################################################################################################
 
 def find_hyperparameter(scores):
@@ -61,19 +63,19 @@ def find_hyperparameter(scores):
 
 
 def train_models_with_cross_validation_and_find_hyperparameters(x, y):
-    print('\n______ STEP 2: find hyper-parameters ______')
+    print('\n_________________ STEP 2: find hyper-parameters _________________')
     models = []  # list of models, after choosing for each its best hyper-parameters
 
-    # KNeighborsClassifier:
-    print('\nKNeighborsClassifier: p=(n_neighbors,weights)')
-    print('  n_neighbors = num of neighbors; default=5')
-    print('  weights = weight function used in prediction; default=uniform')
+    # RandomForestClassifier:
+    print('\nRandomForestClassifier: p=(criterion,min_samples_split)')
+    print('  criterion = the function to measure the quality of a split; default=gini')
+    print('  min_samples_split = min num of samples required to be at leaf; default=2')
     scores = []
-    for n_neighbors in range(1, 20):
-        for weights in ['uniform', 'distance']:
-            clf = KNeighborsClassifier(n_neighbors=n_neighbors, weights=weights)
+    for criterion in ['gini', 'entropy']:
+        for min_samples_split in range(2, 15):
+            clf = RandomForestClassifier(criterion=criterion, min_samples_split=min_samples_split)
             score = np.mean(cross_val_score(estimator=clf, X=x, y=y, cv=10))
-            scores.append((score, (n_neighbors, weights), clf))
+            scores.append((score, (criterion, min_samples_split), clf))
     models.append(find_hyperparameter(scores))
 
     # DecisionTreeClassifier:
@@ -82,22 +84,32 @@ def train_models_with_cross_validation_and_find_hyperparameters(x, y):
     print('  min_samples_split = min num of samples required to be at leaf; default=2')
     scores = []
     for criterion in ['gini', 'entropy']:
-        for min_samples_split in range(2, 20):
+        for min_samples_split in range(2, 15):
             clf = DecisionTreeClassifier(criterion=criterion, min_samples_split=min_samples_split)
             score = np.mean(cross_val_score(estimator=clf, X=x, y=y, cv=10))
             scores.append((score, (criterion, min_samples_split), clf))
     models.append(find_hyperparameter(scores))
 
-    # RandomForestClassifier:
-    print('\nRandomForestClassifier: p=(criterion,min_samples_split)')
-    print('  criterion = the function to measure the quality of a split; default=gini')
-    print('  min_samples_split = min num of samples required to be at leaf; default=2')
+    # KNeighborsClassifier:
+    print('\nKNeighborsClassifier: p=(n_neighbors,weights)')
+    print('  n_neighbors = num of neighbors; default=5')
+    print('  weights = weight function used in prediction; default=uniform')
     scores = []
-    for criterion in ['gini', 'entropy']:
-        for min_samples_split in range(2, 20):
-            clf = RandomForestClassifier(criterion=criterion, min_samples_split=min_samples_split)
+    for n_neighbors in range(1, 15):
+        for weights in ['uniform', 'distance']:
+            clf = KNeighborsClassifier(n_neighbors=n_neighbors, weights=weights)
             score = np.mean(cross_val_score(estimator=clf, X=x, y=y, cv=10))
-            scores.append((score, (criterion, min_samples_split), clf))
+            scores.append((score, (n_neighbors, weights), clf))
+    models.append(find_hyperparameter(scores))
+
+    # SVC:
+    print('\nSVC: p=(kernel)')
+    print('  kernel = specifies the kernel type to be used in the algorithm; default=rbf')
+    scores = []
+    for kernel in ['linear', 'poly', 'rbf', 'sigmoid']:
+        clf = SVC(kernel=kernel)
+        score = np.mean(cross_val_score(estimator=clf, X=x, y=y, cv=10))
+        scores.append((score, (kernel), clf))
     models.append(find_hyperparameter(scores))
 
     return models
