@@ -1,0 +1,131 @@
+C:\python\python.exe C:/STUDY/ML_HW3/main.py
+  n_estimators = num of trees in the forest; default=10
+
+______ STEP 2: find hyper-parameters ______
+
+KNeighborsClassifier: p=(n_neighbors,weights)
+  n_neighbors = num of neighbors; default=5
+  weights = weight function used in prediction; default=uniform
+	 p=(1, 'uniform')	 score=0.7878248553076574
+	 p=(1, 'distance')	 score=0.7878248553076574
+	 p=(2, 'uniform')	 score=0.7821584940431625
+	 p=(2, 'distance')	 score=0.7878248553076574
+	 p=(3, 'uniform')	 score=0.7924938500516657
+	 p=(3, 'distance')	 score=0.796316010217349
+	 p=(4, 'uniform')	 score=0.7980176885349396
+	 p=(4, 'distance')	 score=0.8011584966653611
+	 p=(5, 'uniform')	 score=0.7896832078151445
+	 p=(5, 'distance')	 score=0.8004976359198084
+	 p=(6, 'uniform')	 score=0.7925090609530534
+	 p=(6, 'distance')	 score=0.8011821343157349
+	 p=(7, 'uniform')	 score=0.786863589471226
+	 p=(7, 'distance')	 score=0.795351173208798
+	 p=(8, 'uniform')	 score=0.7840324134289742
+	 p=(8, 'distance')	 score=0.7948572114267181
+	 p=(9, 'uniform')	 score=0.7798675289051606
+	 p=(9, 'distance')	 score=0.7908537012812391
+	 p=(10, 'uniform')	 score=0.7790299532952598
+	 p=(10, 'distance')	 score=0.7901972553038985
+	 p=(11, 'uniform')	 score=0.7696831087059087
+	 p=(11, 'distance')	 score=0.7880169595388546
+	 p=(12, 'uniform')	 score=0.7668460913995896
+	 p=(12, 'distance')	 score=0.7818564615731622
+	 p=(13, 'uniform')	 score=0.7606907001334682
+	 p=(13, 'distance')	 score=0.7785183192007018
+	 p=(14, 'uniform')	 score=0.7566857292413759
+	 p=(14, 'distance')	 score=0.7743510023001179
+	 p=(15, 'uniform')	 score=0.7515286600926483
+	 p=(15, 'distance')	 score=0.7737001560881737
+	 p=(16, 'uniform')	 score=0.7473698422226112
+	 p=(16, 'distance')	 score=0.7676963364585923
+	 p=(17, 'uniform')	 score=0.7443787475533562
+	 p=(17, 'distance')	 score=0.7671880163395736
+	 p=(18, 'uniform')	 score=0.7436992700045711
+	 p=(18, 'distance')	 score=0.7636913084434063
+	 p=(19, 'uniform')	 score=0.7386984651824591
+	 p=(19, 'distance')	 score=0.7615159904092594
+	 >>>>	 p=(6, 'distance') achieved the maximum score of 0.8011821343157349
+
+DecisionTreeClassifier: p=(criterion,min_samples_split)
+  criterion = the function to measure the quality of a split; default=gini
+  min_samples_split = min num of samples required to be at leaf; default=2
+	 p=('gini', 2)	 score=0.8306457810075368
+	 p=('gini', 3)	 score=0.8279883230610852
+	 p=('gini', 4)	 score=0.8321386326916608
+	 p=('gini', 5)	 score=0.8309772234663944
+	 p=('gini', 6)	 score=0.8331406222216577
+	 p=('gini', 7)	 score=0.8328102713491654
+	 p=('gini', 8)	 score=0.8309895393652743
+	 p=('gini', 9)	 score=0.8309942706284204
+	 p=('gini', 10)	 score=0.8319934561914637
+	 p=('gini', 11)	 score=0.8323243583897147
+	 p=('gini', 12)	 score=0.8328159697224373
+	 p=('gini', 13)	 score=0.8324823107371039
+	 p=('gini', 14)	 score=0.8334820396815712
+	 p=('gini', 15)	 score=0.8323145901245281
+	 p=('gini', 16)	 score=0.8309716947952126
+	 p=('gini', 17)	 score=0.8294699149384608
+	 p=('gini', 18)	 score=0.8284801852746627
+	 p=('gini', 19)	 score=0.8278268208259588
+	 p=('entropy', 2)	 score=0.8496648711002084
+	 p=('entropy', 3)	 score=0.8446539796458078
+	 p=('entropy', 4)	 score=0.846150991774185
+	 p=('entropy', 5)	 score=0.8453054065614138
+	 p=('entropy', 6)	 score=0.8498375365531592
+	 p=('entropy', 7)	 score=0.8469918459610994
+	 p=('entropy', 8)	 score=0.845163817140063
+	 p=('entropy', 9)	 score=0.8435000928294203
+	 p=('entropy', 10)	 score=0.8424850938652091
+	 p=('entropy', 11)	 score=0.8434779100078927
+	 p=('entropy', 12)	 score=0.8441465308582448
+	 p=('entropy', 13)	 score=0.8431431958392525
+	 p=('entropy', 14)	 score=0.8406399938925476
+	 p=('entropy', 15)	 score=0.8404724683779682
+	 p=('entropy', 16)	 score=0.8403113168582642
+	 p=('entropy', 17)	 score=0.8408062968890277
+	 p=('entropy', 18)	 score=0.8408121258810528
+	 p=('entropy', 19)	 score=0.8376435003332083
+	 >>>>	 p=('entropy', 6) achieved the maximum score of 0.8498375365531592
+
+RandomForestClassifier: p=(criterion,min_samples_split)
+  criterion = the function to measure the quality of a split; default=gini
+  min_samples_split = min num of samples required to be at leaf; default=2
+	 p=('gini', 2)	 score=0.8799454571131221
+	 p=('gini', 3)	 score=0.8831484704213203
+	 p=('gini', 4)	 score=0.8859748712879734
+	 p=('gini', 5)	 score=0.8882747170758668
+	 p=('gini', 6)	 score=0.8891127720749916
+	 p=('gini', 7)	 score=0.8854822236959962
+	 p=('gini', 8)	 score=0.881968632610574
+	 p=('gini', 9)	 score=0.880109120532752
+	 p=('gini', 10)	 score=0.879958934077416
+	 p=('gini', 11)	 score=0.8846314228233089
+	 p=('gini', 12)	 score=0.8864656935512771
+	 p=('gini', 13)	 score=0.8818125850945894
+	 p=('gini', 14)	 score=0.8819645240367192
+	 p=('gini', 15)	 score=0.8794514120070979
+	 p=('gini', 16)	 score=0.8781072879501203
+	 p=('gini', 17)	 score=0.8761547536148793
+	 p=('gini', 18)	 score=0.8797855332371819
+	 p=('gini', 19)	 score=0.8779531600312648
+	 p=('entropy', 2)	 score=0.882124101018481
+	 p=('entropy', 3)	 score=0.8921190983984315
+	 p=('entropy', 4)	 score=0.8897962789052105
+	 p=('entropy', 5)	 score=0.8877770111153437
+	 p=('entropy', 6)	 score=0.8871488872581311
+	 p=('entropy', 7)	 score=0.8882737420841345
+	 p=('entropy', 8)	 score=0.8852736953929163
+	 p=('entropy', 9)	 score=0.8866318686474454
+	 p=('entropy', 10)	 score=0.8849620628686793
+	 p=('entropy', 11)	 score=0.8831268954158364
+	 p=('entropy', 12)	 score=0.882936255992535
+	 p=('entropy', 13)	 score=0.8794816233905113
+	 p=('entropy', 14)	 score=0.8847808831746841
+	 p=('entropy', 15)	 score=0.8819479762823462
+	 p=('entropy', 16)	 score=0.8802909421313275
+	 p=('entropy', 17)	 score=0.8799514181635484
+	 p=('entropy', 18)	 score=0.8752993522163883
+	 p=('entropy', 19)	 score=0.8761114601139741
+	 >>>>	 p=('entropy', 3) achieved the maximum score of 0.8921190983984315
+
+Process finished with exit code 0
