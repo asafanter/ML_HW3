@@ -5,12 +5,16 @@ import numpy
 import pandas as pd
 import numpy as np
 
+from sklearn.metrics import precision_recall_fscore_support
+
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+
+from sklearn.metrics import average_precision_score
 
 # scikit-learn imports
 from sklearn.model_selection import cross_val_predict
@@ -19,7 +23,6 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
 
 from sklearn import svm, datasets
 from sklearn.model_selection import train_test_split
@@ -27,6 +30,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 
 from sklearn.metrics import classification_report
+from operator import itemgetter
 
 # np.set_printoptions(threshold=sys.maxsize)
 desired_width = 320
@@ -149,6 +153,39 @@ def train_models_with_cross_validation_in_order_to_find_hyperparameters(x, y):
 #         validation set.
 ########################################################################################################################
 
+def report_performance_metrics(y_true, y_predict):
+    # accuracy and error:
+    accuracy = accuracy_score(y_true, y_predict)
+    error = 1 - accuracy
+    print("accuracy: {:.3f} or {:.3f}%".format(accuracy, accuracy * 100))
+    print("error:    {:.3f} or {:.3f}%".format(error, error * 100))
+    print("metrics on each label:")
+
+    # metrics on each label:
+
+    precision = precision_score(y_true, y_predict, average=None)
+    recall = recall_score(y_true, y_predict, average=None)
+
+    sample_num = y_true.count()
+    true_votes_num = y_true.value_counts().reindex(labels, fill_value=0).sort_index()
+    true_votes_percent = [round((size / sample_num) * 100, 2) for size in true_votes_num]
+    pred_votes_num = y_predict.value_counts().reindex(labels, fill_value=0).sort_index()
+    pred_votes_percent = [round((size / sample_num) * 100, 2) for size in pred_votes_num]
+    pred_votes = ["{0} ({1}%)".format(num, percent) for (num, percent) in list(zip(pred_votes_num, pred_votes_percent))]
+    true_votes = ["{0} ({1}%)".format(num, percent) for (num, percent) in list(zip(true_votes_num, true_votes_percent))]
+
+    metrics = [(label, round(precision, 4), round(recall, 4), pred_votes, true_votes)
+               for (label, precision, recall, pred_votes, true_votes)
+               in list(zip(labels, precision, recall, pred_votes, true_votes))]
+    metrics.insert(0, ('\t              ',
+                       '\tprecision     ',
+                       '\trecall        ',
+                       '\tpredict votes ',
+                       '\ttrue votes    '))
+    for row in range(5):
+        print('\t'.join(["{:<13}".format(str(m[row])) for m in metrics]))
+
+
 def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
     conf_mat = confusion_matrix(y_true, y_predict, labels=labels)
 
@@ -186,8 +223,8 @@ def report_performance_histogram(y_true, y_predict, cls_name, step_num):
     index = np.arange(0, len(true_data) * 2, 2)
     bar_width = 0.8
 
-    true_bar = plt.bar(index, true_data, bar_width, color='turquoise', label='True value')
-    predict_bar = plt.bar(index + bar_width, predict_data, bar_width, color='lightcoral', label='Prediction')
+    predict_bar = plt.bar(index, predict_data, bar_width, color='lightcoral', label='Prediction')
+    true_bar = plt.bar(index + bar_width, true_data, bar_width, color='turquoise', label='True value')
 
     plt.xlabel('Party')
     plt.ylabel('Votes')
@@ -208,11 +245,25 @@ def report_performance_histogram(y_true, y_predict, cls_name, step_num):
 
 
 def report_performance(y_true, y_predict, cls_name, step_num):
+    report_performance_metrics(y_true, y_predict)
+
     report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num)
 
     report_performance_histogram(y_true, y_predict, cls_name, step_num)
 
     # print(classification_report(validation_Y, prediction_y, target_names=labels))
+
+
+def find_prediction_proba_y(clf, validation_X, threshold):
+    proba_y = clf.predict_proba(validation_X)
+    prediction_proba_y = []
+    for sample in proba_y:
+        distribution = list(zip(labels, sample))
+        max_label, max_proba = max(distribution, key=itemgetter(1))
+        if max_proba < threshold:
+            max_label = 'Unknown'
+        prediction_proba_y.append(max_label)
+    return pd.Series(prediction_proba_y)
 
 
 def compare_performance(models_and_scores, training_X, training_Y, validation_X, validation_Y):
@@ -222,10 +273,12 @@ def compare_performance(models_and_scores, training_X, training_Y, validation_X,
         clf_name = clf.__class__.__name__
         clf.fit(training_X, training_Y)
         prediction_y = pd.Series(clf.predict(validation_X))
+        prediction_proba_y = find_prediction_proba_y(clf, validation_X, threshold=0.4)
         print("\n---------------------- {0} ----------------------".format(clf_name))
         print("(reminder: cross_val_score on the training set: {0})".format(training_cv_score))
         report_performance(validation_Y, prediction_y, clf_name, 3)
 
+        return
     return None
 
 
