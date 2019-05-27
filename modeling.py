@@ -1,42 +1,25 @@
 from prepare_data import *
-import sys
-import numpy
 
 import pandas as pd
 import numpy as np
-
-from sklearn.metrics import precision_recall_fscore_support
 
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
 
-from sklearn.metrics import average_precision_score
-
-# scikit-learn imports
-from sklearn.model_selection import cross_val_predict
-from sklearn.metrics import confusion_matrix, f1_score, precision_recall_curve, roc_curve, roc_auc_score
-from sklearn.linear_model import SGDClassifier
-from sklearn.preprocessing import StandardScaler
-import seaborn as sns
 import matplotlib.pyplot as plt
-
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.utils.multiclass import unique_labels
-
-from sklearn.metrics import classification_report
 from operator import itemgetter
+import warnings
 
-# np.set_printoptions(threshold=sys.maxsize)
 desired_width = 320
 pd.set_option('display.width', desired_width)
 np.set_printoptions(linewidth=desired_width)
 pd.set_option('display.max_columns', 15)
+
+warnings.filterwarnings('ignore')  # todo: recheck before submission
 
 
 ########################################################################################################################
@@ -140,7 +123,7 @@ def train_models_with_cross_validation_in_order_to_find_hyperparameters(x, y):
     print('  kernel = specifies the kernel type to be used in the algorithm; default=rbf')
     scores = []
     for kernel in ['linear', 'poly', 'rbf', 'sigmoid']:
-        clf = SVC(kernel=kernel)
+        clf = SVC(kernel=kernel, probability=True)
         score = np.mean(cross_val_score(estimator=clf, X=x, y=y, cv=10))
         scores.append((score, (kernel), clf))
     models_and_scores.append(find_hyperparameter(scores))
@@ -153,13 +136,17 @@ def train_models_with_cross_validation_in_order_to_find_hyperparameters(x, y):
 #         validation set.
 ########################################################################################################################
 
-def report_performance_metrics(y_true, y_predict):
+def report_performance_metrics(y_true, y_predict, prediction_proba_y, threshold):
     # accuracy and error:
     accuracy = accuracy_score(y_true, y_predict)
     error = 1 - accuracy
-    print("accuracy: {:.3f} or {:.3f}%".format(accuracy, accuracy * 100))
-    print("error:    {:.3f} or {:.3f}%".format(error, error * 100))
-    print("metrics on each label:")
+    print("accuracy (without threshold): {:.3f}%  (error: {:.3f}%)".format(accuracy * 100, error * 100))
+    accuracy_with_threshold = accuracy_score(y_true, prediction_proba_y)
+    error_with_threshold = 1 - accuracy_with_threshold
+    print("accuracy (with threshold={}): {:.3f}%  (error: {:.3f}%)".format(threshold, accuracy_with_threshold * 100,
+                                                                           error_with_threshold * 100))
+
+    print("metrics on each label (without threshold):")
 
     # metrics on each label:
 
@@ -177,21 +164,20 @@ def report_performance_metrics(y_true, y_predict):
     metrics = [(label, round(precision, 4), round(recall, 4), pred_votes, true_votes)
                for (label, precision, recall, pred_votes, true_votes)
                in list(zip(labels, precision, recall, pred_votes, true_votes))]
-    metrics.insert(0, ('\t              ',
-                       '\tprecision     ',
-                       '\trecall        ',
-                       '\tpredict votes ',
-                       '\ttrue votes    '))
+    metrics.insert(0,
+                   ('\t              ', '\tprecision     ', '\trecall        ', '\tpredict votes ', '\ttrue votes    '))
     for row in range(5):
         print('\t'.join(["{:<13}".format(str(m[row])) for m in metrics]))
+
+    return accuracy
 
 
 def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
     conf_mat = confusion_matrix(y_true, y_predict, labels=labels)
 
-    # stdout:
-    print("confusion matrix:")
-    print(pd.DataFrame(conf_mat, columns=["Predicted " + x for x in labels], index=["Actual " + x for x in labels]))
+    # # stdout:
+    # print("confusion matrix:")
+    # print(pd.DataFrame(conf_mat, columns=["Predicted " + x for x in labels], index=["Actual " + x for x in labels]))
 
     # plot:
     classes = labels
@@ -214,26 +200,32 @@ def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
     plt.show()
 
 
-def report_performance_histogram(y_true, y_predict, cls_name, step_num):
+def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num):
+    labels_with_unknown = labels + ['_Unknown']
     sample_num = y_true.count()
-    true_data = y_true.value_counts().reindex(labels, fill_value=0).sort_index()
-    predict_data = y_predict.value_counts().reindex(labels, fill_value=0).sort_index()
+    true_data = y_true.value_counts().reindex(labels_with_unknown, fill_value=0).sort_index()
+    predict_data = y_predict.value_counts().reindex(labels_with_unknown, fill_value=0).sort_index()
+    predict_data_with_threshold = prediction_proba_y.value_counts().reindex(labels_with_unknown,
+                                                                            fill_value=0).sort_index()
 
-    fig, ax = plt.subplots(figsize=(15, 7))
-    index = np.arange(0, len(true_data) * 2, 2)
+    fig, ax = plt.subplots(figsize=(21, 8))
+    index = np.arange(0, len(true_data) * 3, 3)
     bar_width = 0.8
 
-    predict_bar = plt.bar(index, predict_data, bar_width, color='lightcoral', label='Prediction')
-    true_bar = plt.bar(index + bar_width, true_data, bar_width, color='turquoise', label='True value')
+    predict_threshold_bar = plt.bar(index, predict_data_with_threshold, bar_width, color='deepskyblue',
+                                    label='Prediction (threshold={0})'.format(threshold))
+    predict_bar = plt.bar(index + bar_width, predict_data, bar_width, color='violet',
+                          label='Prediction (without threshold)')
+    true_bar = plt.bar(index + 2 * bar_width, true_data, bar_width, color='springgreen', label='True value')
 
     plt.xlabel('Party')
     plt.ylabel('Votes')
     plt.title('STEP {0}: histogram of {1}'.format(step_num, cls_name))
-    plt.xticks(index + bar_width / 2, labels)
+    plt.xticks(index + bar_width, labels_with_unknown)
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
     plt.legend()
 
-    for rects in [true_bar, predict_bar]:
+    for rects in [predict_threshold_bar, predict_bar, true_bar]:
         for rect in rects:
             height = rect.get_height()
             percent = round((height / sample_num) * 100, 2)
@@ -244,14 +236,14 @@ def report_performance_histogram(y_true, y_predict, cls_name, step_num):
     plt.show()
 
 
-def report_performance(y_true, y_predict, cls_name, step_num):
-    report_performance_metrics(y_true, y_predict)
+def report_performance(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num):
+    accuracy = report_performance_metrics(y_true, y_predict, prediction_proba_y, threshold)
 
     report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num)
 
-    report_performance_histogram(y_true, y_predict, cls_name, step_num)
+    report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num)
 
-    # print(classification_report(validation_Y, prediction_y, target_names=labels))
+    return accuracy
 
 
 def find_prediction_proba_y(clf, validation_X, threshold):
@@ -261,7 +253,7 @@ def find_prediction_proba_y(clf, validation_X, threshold):
         distribution = list(zip(labels, sample))
         max_label, max_proba = max(distribution, key=itemgetter(1))
         if max_proba < threshold:
-            max_label = 'Unknown'
+            max_label = '_Unknown'
         prediction_proba_y.append(max_label)
     return pd.Series(prediction_proba_y)
 
@@ -269,17 +261,23 @@ def find_prediction_proba_y(clf, validation_X, threshold):
 def compare_performance(models_and_scores, training_X, training_Y, validation_X, validation_Y):
     print('\n_________________ STEP 3: check performance on validation set _________________')
 
+    max_accuracy, max_model = 0, None
     for clf, training_cv_score in models_and_scores:
+        threshold = 0.4
         clf_name = clf.__class__.__name__
+
         clf.fit(training_X, training_Y)
         prediction_y = pd.Series(clf.predict(validation_X))
-        prediction_proba_y = find_prediction_proba_y(clf, validation_X, threshold=0.4)
+        prediction_proba_y = find_prediction_proba_y(clf, validation_X, threshold)
+
         print("\n---------------------- {0} ----------------------".format(clf_name))
         print("(reminder: cross_val_score on the training set: {0})".format(training_cv_score))
-        report_performance(validation_Y, prediction_y, clf_name, 3)
+        accuracy = report_performance(validation_Y, prediction_y, prediction_proba_y, threshold, clf_name, 3)
 
-        return
-    return None
+        if accuracy > max_accuracy:
+            max_accuracy, max_model = accuracy, clf
+
+    return max_model
 
 
 ########################################################################################################################
@@ -308,8 +306,9 @@ if __name__ == '__main__':
         (RandomForestClassifier(criterion='entropy', min_samples_split=4), 0),
         (DecisionTreeClassifier(criterion='entropy', min_samples_split=6), 0),
         (KNeighborsClassifier(n_neighbors=6, weights='distance'), 0),
-        (SVC(kernel='linear'), 0)]
+        (SVC(kernel='linear', probability=True), 0)]
 
     # STEP 3: train the models with all the training set (without cross validation), and check performance on the
     #         validation set.
     best_model = compare_performance(models_and_scores, training_X, training_Y, validation_X, validation_Y)
+    # print(best_model)
