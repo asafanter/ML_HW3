@@ -164,7 +164,7 @@ def data_transformation_of_categorical(data: pd.DataFrame) -> pd.DataFrame:
     """ perform categorical to numeric conversion"""
 
     # Multi-valued un-ordered:
-    for f in ['Vote', 'Most_Important_Issue']:
+    for f in ['Most_Important_Issue']:
         data[f] = data[f].astype("category").cat.rename_categories(range(data[f].nunique())).astype(int)
 
     return data
