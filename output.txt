@@ -1,108 +1,210 @@
-C:\python\python.exe C:/STUDY/ML_HW3/main.py
+C:\python\python.exe C:\STUDY\ML_HW3\modeling.py
+
+
+_________________ STEP 1: prepare the data _________________
+
 
 _________________ STEP 2: find hyper-parameters _________________
 
 RandomForestClassifier: p=(criterion,min_samples_split)
   criterion = the function to measure the quality of a split; default=gini
   min_samples_split = min num of samples required to be at leaf; default=2
-	 p=('gini', 2)	 score=0.8831466325798422
-	 p=('gini', 3)	 score=0.8863026249754379
-	 p=('gini', 4)	 score=0.8886072358266659
-	 p=('gini', 5)	 score=0.8823061556163572
-	 p=('gini', 6)	 score=0.8889643055162489
-	 p=('gini', 7)	 score=0.8897748611948046
-	 p=('gini', 8)	 score=0.8859639076742306
-	 p=('gini', 9)	 score=0.8852937540386112
-	 p=('gini', 10)	 score=0.8829549553940123
-	 p=('gini', 11)	 score=0.8824713931416566
-	 p=('gini', 12)	 score=0.8799774003669066
-	 p=('gini', 13)	 score=0.8832903612254406
-	 p=('gini', 14)	 score=0.8811554272401236
-	 p=('entropy', 2)	 score=0.8877917025286914
-	 p=('entropy', 3)	 score=0.8871067577739064
-	 p=('entropy', 4)	 score=0.8911148094252861
-	 p=('entropy', 5)	 score=0.886629362780557
-	 p=('entropy', 6)	 score=0.8876347201187942
-	 p=('entropy', 7)	 score=0.8894810602072944
-	 p=('entropy', 8)	 score=0.8857704244607874
-	 p=('entropy', 9)	 score=0.8856058996507045
-	 p=('entropy', 10)	 score=0.8834505264272604
-	 p=('entropy', 11)	 score=0.8831014455670776
-	 p=('entropy', 12)	 score=0.8850960846143036
-	 p=('entropy', 13)	 score=0.8831228743873408
-	 p=('entropy', 14)	 score=0.8816090904877034
-	 >>>>	 p=('entropy', 4) achieved the maximum score of 0.8911148094252861
+	 p=('gini', 2)	 score=0.8713582836580981
+	 p=('gini', 3)	 score=0.8776936765386825
+	 p=('gini', 4)	 score=0.876514271441055
+	 p=('gini', 5)	 score=0.8801773877792949
+	 p=('gini', 6)	 score=0.8763377800126422
+	 p=('gini', 7)	 score=0.8820289324095398
+	 p=('gini', 8)	 score=0.8759739132652372
+	 p=('gini', 9)	 score=0.8755194598130169
+	 p=('gini', 10)	 score=0.8701951251866793
+	 p=('gini', 11)	 score=0.8755216805184572
+	 p=('gini', 12)	 score=0.8736837455496177
+	 p=('gini', 13)	 score=0.8761921808384641
+	 p=('gini', 14)	 score=0.8726860003908407
+	 p=('entropy', 2)	 score=0.8825004957251622
+	 p=('entropy', 3)	 score=0.8826646939375298
+	 p=('entropy', 4)	 score=0.880685380192903
+	 p=('entropy', 5)	 score=0.880997581571102
+	 p=('entropy', 6)	 score=0.8814938115340054
+	 p=('entropy', 7)	 score=0.8879886576330801
+	 p=('entropy', 8)	 score=0.881013475301492
+	 p=('entropy', 9)	 score=0.8790310429067105
+	 p=('entropy', 10)	 score=0.8754936123503738
+	 p=('entropy', 11)	 score=0.8803515839350025
+	 p=('entropy', 12)	 score=0.880181834019868
+	 p=('entropy', 13)	 score=0.8768368051188002
+	 p=('entropy', 14)	 score=0.8755068547263545
+	 >>>>	 p=('entropy', 7) achieved the maximum score of 0.8879886576330801
 
 DecisionTreeClassifier: p=(criterion,min_samples_split)
   criterion = the function to measure the quality of a split; default=gini
   min_samples_split = min num of samples required to be at leaf; default=2
-	 p=('gini', 2)	 score=0.8304748858280983
-	 p=('gini', 3)	 score=0.8329566906881546
-	 p=('gini', 4)	 score=0.8304773788231818
-	 p=('gini', 5)	 score=0.8294696946742203
-	 p=('gini', 6)	 score=0.8349795911228135
-	 p=('gini', 7)	 score=0.832978965108285
-	 p=('gini', 8)	 score=0.8313172725477374
-	 p=('gini', 9)	 score=0.8315023098438292
-	 p=('gini', 10)	 score=0.8321526247208547
-	 p=('gini', 11)	 score=0.8324771311563322
-	 p=('gini', 12)	 score=0.8313286605600181
-	 p=('gini', 13)	 score=0.8313173147144279
-	 p=('gini', 14)	 score=0.833147913179277
-	 p=('entropy', 2)	 score=0.8438309704404408
-	 p=('entropy', 3)	 score=0.8456395247129723
-	 p=('entropy', 4)	 score=0.8451594983589736
-	 p=('entropy', 5)	 score=0.8463085029589706
-	 p=('entropy', 6)	 score=0.8470046373455966
-	 p=('entropy', 7)	 score=0.8458265500480964
-	 p=('entropy', 8)	 score=0.8464868638973039
-	 p=('entropy', 9)	 score=0.8441634187527495
-	 p=('entropy', 10)	 score=0.8421417432982157
-	 p=('entropy', 11)	 score=0.8433186851774289
-	 p=('entropy', 12)	 score=0.8439823484884513
-	 p=('entropy', 13)	 score=0.8428078784545068
-	 p=('entropy', 14)	 score=0.8424747427824576
-	 >>>>	 p=('entropy', 6) achieved the maximum score of 0.8470046373455966
+	 p=('gini', 2)	 score=0.8265267667540386
+	 p=('gini', 3)	 score=0.8248727925727435
+	 p=('gini', 4)	 score=0.8278642371629014
+	 p=('gini', 5)	 score=0.8266906367681042
+	 p=('gini', 6)	 score=0.8281873539883196
+	 p=('gini', 7)	 score=0.824025531254378
+	 p=('gini', 8)	 score=0.8255242025266225
+	 p=('gini', 9)	 score=0.8266800653218345
+	 p=('gini', 10)	 score=0.8245300413923597
+	 p=('gini', 11)	 score=0.8228527186022111
+	 p=('gini', 12)	 score=0.8218529412243669
+	 p=('gini', 13)	 score=0.821841198315281
+	 p=('gini', 14)	 score=0.8210047513463445
+	 p=('entropy', 2)	 score=0.8433501366224627
+	 p=('entropy', 3)	 score=0.8435555023308471
+	 p=('entropy', 4)	 score=0.8432021500718733
+	 p=('entropy', 5)	 score=0.8421956022826093
+	 p=('entropy', 6)	 score=0.8428609545301023
+	 p=('entropy', 7)	 score=0.8437176129501172
+	 p=('entropy', 8)	 score=0.8430439163062102
+	 p=('entropy', 9)	 score=0.8395249779625692
+	 p=('entropy', 10)	 score=0.8426939861189954
+	 p=('entropy', 11)	 score=0.8420573313447484
+	 p=('entropy', 12)	 score=0.8392140164620144
+	 p=('entropy', 13)	 score=0.8418638250812297
+	 p=('entropy', 14)	 score=0.8398598627333975
+	 >>>>	 p=('entropy', 7) achieved the maximum score of 0.8437176129501172
 
 KNeighborsClassifier: p=(n_neighbors,weights)
   n_neighbors = num of neighbors; default=5
   weights = weight function used in prediction; default=uniform
-	 p=(1, 'uniform')	 score=0.7878248553076574
-	 p=(1, 'distance')	 score=0.7878248553076574
-	 p=(2, 'uniform')	 score=0.7821584940431625
-	 p=(2, 'distance')	 score=0.7878248553076574
-	 p=(3, 'uniform')	 score=0.7924938500516657
-	 p=(3, 'distance')	 score=0.796316010217349
-	 p=(4, 'uniform')	 score=0.7980176885349396
-	 p=(4, 'distance')	 score=0.8011584966653611
-	 p=(5, 'uniform')	 score=0.7896832078151445
-	 p=(5, 'distance')	 score=0.8004976359198084
-	 p=(6, 'uniform')	 score=0.7925090609530534
-	 p=(6, 'distance')	 score=0.8011821343157349
-	 p=(7, 'uniform')	 score=0.786863589471226
-	 p=(7, 'distance')	 score=0.795351173208798
-	 p=(8, 'uniform')	 score=0.7840324134289742
-	 p=(8, 'distance')	 score=0.7948572114267181
-	 p=(9, 'uniform')	 score=0.7798675289051606
-	 p=(9, 'distance')	 score=0.7908537012812391
-	 p=(10, 'uniform')	 score=0.7790299532952598
-	 p=(10, 'distance')	 score=0.7901972553038985
-	 p=(11, 'uniform')	 score=0.7696831087059087
-	 p=(11, 'distance')	 score=0.7880169595388546
-	 p=(12, 'uniform')	 score=0.7668460913995896
-	 p=(12, 'distance')	 score=0.7818564615731622
-	 p=(13, 'uniform')	 score=0.7606907001334682
-	 p=(13, 'distance')	 score=0.7785183192007018
-	 p=(14, 'uniform')	 score=0.7566857292413759
-	 p=(14, 'distance')	 score=0.7743510023001179
-	 >>>>	 p=(6, 'distance') achieved the maximum score of 0.8011821343157349
+	 p=(1, 'uniform')	 score=0.7865021257089265
+	 p=(1, 'distance')	 score=0.7865021257089265
+	 p=(2, 'uniform')	 score=0.7823417733767081
+	 p=(2, 'distance')	 score=0.7865021257089265
+	 p=(3, 'uniform')	 score=0.7938343749302208
+	 p=(3, 'distance')	 score=0.7988336854313421
+	 p=(4, 'uniform')	 score=0.7958736597686645
+	 p=(4, 'distance')	 score=0.8005062732199617
+	 p=(5, 'uniform')	 score=0.7863887511669653
+	 p=(5, 'distance')	 score=0.7963719292229623
+	 p=(6, 'uniform')	 score=0.784564919658967
+	 p=(6, 'distance')	 score=0.796880192855105
+	 p=(7, 'uniform')	 score=0.7775655150287163
+	 p=(7, 'distance')	 score=0.7932270321506267
+	 p=(8, 'uniform')	 score=0.7741910149521081
+	 p=(8, 'distance')	 score=0.7905624844914301
+	 p=(9, 'uniform')	 score=0.7715292237386412
+	 p=(9, 'distance')	 score=0.7868587148090687
+	 p=(10, 'uniform')	 score=0.7686784463329804
+	 p=(10, 'distance')	 score=0.7828761715019211
+	 p=(11, 'uniform')	 score=0.75970033236768
+	 p=(11, 'distance')	 score=0.7790334625171302
+	 p=(12, 'uniform')	 score=0.7600363545545639
+	 p=(12, 'distance')	 score=0.7748883896624615
+	 p=(13, 'uniform')	 score=0.7530362373127862
+	 p=(13, 'distance')	 score=0.7710456615696566
+	 p=(14, 'uniform')	 score=0.7545468563067639
+	 p=(14, 'distance')	 score=0.768553104633271
+	 >>>>	 p=(4, 'distance') achieved the maximum score of 0.8005062732199617
 
 SVC: p=(kernel)
   kernel = specifies the kernel type to be used in the algorithm; default=rbf
-	 p=linear	 score=0.7975176244891198
-	 p=poly	 score=0.6646679567321548
-	 p=rbf	 score=0.7254847318223991
-	 p=sigmoid	 score=0.27765827973801765
-	 >>>>	 p=linear achieved the maximum score of 0.7975176244891198
+	 p=linear	 score=0.7933437222056964
+	 p=poly	 score=0.6657080530496943
+	 p=rbf	 score=0.719200278764122
+	 p=sigmoid	 score=0.29901258560529415
+	 >>>>	 p=linear achieved the maximum score of 0.7933437222056964
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion='entropy',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=7,
+            min_weight_fraction_leaf=0.0, n_estimators=10, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False) 0.8879886576330801
+DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=None,
+            max_features=None, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=7,
+            min_weight_fraction_leaf=0.0, presort=False, random_state=None,
+            splitter='best') 0.8437176129501172
+KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+           metric_params=None, n_jobs=1, n_neighbors=4, p=2,
+           weights='distance') 0.8005062732199617
+SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False) 0.7933437222056964
+
+_________________ STEP 3: check performance on validation set _________________
+
+---------------------- RandomForestClassifier ----------------------
+(reminder: cross_val_score on the training set: 0.8879886576330801)
+confusion matrix:
+                   Predicted Blues  Predicted Browns  Predicted Greens  Predicted Greys  Predicted Khakis  Predicted Oranges  Predicted Pinks  Predicted Purples  Predicted Reds  Predicted Turquoises  Predicted Violets  Predicted Whites  Predicted Yellows
+Actual Blues                    92                 0                 0                1                 8                  2                0                  1               1                     2                  1                 0                  5
+Actual Browns                    0               154                 0                3                 0                  1                3                  6               0                     0                  0                 3                  1
+Actual Greens                    0                 0                95                0                 0                  2                1                  1               0                     0                  0                 0                  1
+Actual Greys                     0                 3                 0               78                 0                  1                0                  4               0                     0                  0                 0                  0
+Actual Khakis                    1                 1                 0                0               377                  2                0                  3               0                     8                  7                 0                  4
+Actual Oranges                   0                 1                 0                2                 0                 64                1                  5               4                     0                  0                 1                  0
+Actual Pinks                     0                 9                 0                0                 0                  1               53                  4               0                     0                  0                 3                  0
+Actual Purples                   0                 1                 1                0                 0                  0                3                478               1                     0                  0                 3                  0
+Actual Reds                      0                 0                 0                0                 0                  1                0                  2             106                     0                  0                 0                  0
+Actual Turquoises                0                 0                 0                0                33                  0                0                  0               0                    60                  3                 0                  3
+Actual Violets                   0                 0                 0                0                36                  0                0                  0               0                     8                 47                 0                  1
+Actual Whites                    0                14                 0                2                 0                  1                2                  3               1                     0                  0                83                  0
+Actual Yellows                   4                 0                 0                1                 1                  5                0                  4               2                     0                  0                 0                 69
+histogram:
+
+---------------------- DecisionTreeClassifier ----------------------
+(reminder: cross_val_score on the training set: 0.8437176129501172)
+confusion matrix:
+                   Predicted Blues  Predicted Browns  Predicted Greens  Predicted Greys  Predicted Khakis  Predicted Oranges  Predicted Pinks  Predicted Purples  Predicted Reds  Predicted Turquoises  Predicted Violets  Predicted Whites  Predicted Yellows
+Actual Blues                    87                 0                 0                0                 7                  2                1                  1               0                     3                  4                 0                  8
+Actual Browns                    0               150                 0                1                 0                  0                3                  7               0                     0                  0                 9                  1
+Actual Greens                    2                 0                96                0                 0                  0                0                  0               0                     0                  0                 0                  2
+Actual Greys                     0                 1                 0               75                 0                  1                0                  3               1                     0                  0                 4                  1
+Actual Khakis                    7                 1                 1                0               350                  1                1                  2               0                    22                 10                 0                  8
+Actual Oranges                   2                 2                 0                3                 1                 56                2                  4               4                     0                  0                 2                  2
+Actual Pinks                     0                 5                 0                0                 0                  2               55                  1               0                     0                  0                 5                  2
+Actual Purples                   2                 9                 1                3                 0                  3                9                448               1                     0                  0                 8                  3
+Actual Reds                      0                 1                 0                0                 0                  3                0                  3              99                     0                  0                 2                  1
+Actual Turquoises                3                 0                 0                0                14                  0                0                  0               0                    73                  8                 0                  1
+Actual Violets                   1                 0                 0                0                15                  0                0                  0               0                     8                 66                 0                  2
+Actual Whites                    0                10                 0                2                 0                  2                1                  3               0                     0                  0                86                  2
+Actual Yellows                  10                 0                 1                0                 6                  4                4                  3               0                     1                  1                 2                 54
+histogram:
+
+---------------------- KNeighborsClassifier ----------------------
+(reminder: cross_val_score on the training set: 0.8005062732199617)
+confusion matrix:
+                   Predicted Blues  Predicted Browns  Predicted Greens  Predicted Greys  Predicted Khakis  Predicted Oranges  Predicted Pinks  Predicted Purples  Predicted Reds  Predicted Turquoises  Predicted Violets  Predicted Whites  Predicted Yellows
+Actual Blues                    59                 0                 1                0                21                  0                0                  0               0                     8                  1                 0                 23
+Actual Browns                    0               151                 0                0                 0                  0                1                  5               0                     0                  0                14                  0
+Actual Greens                    0                 0                92                0                 0                  0                0                  8               0                     0                  0                 0                  0
+Actual Greys                     0                 0                 0               78                 0                  0                0                  0               8                     0                  0                 0                  0
+Actual Khakis                    1                 0                 1                0               334                  0                0                  1               0                    30                 18                 0                 18
+Actual Oranges                   0                 0                 0                5                 0                 58                0                  0              14                     0                  0                 0                  1
+Actual Pinks                     1                21                 0                0                 0                  0               41                  4               0                     0                  0                 3                  0
+Actual Purples                   0                 0                 1                0                 0                  0                1                482               0                     0                  0                 1                  2
+Actual Reds                      0                 0                 0                7                 0                  0                0                  1             101                     0                  0                 0                  0
+Actual Turquoises                2                 0                 0                0                52                  0                0                  0               0                    36                  7                 0                  2
+Actual Violets                   2                 0                 0                0                56                  0                0                  0               0                     8                 23                 1                  2
+Actual Whites                    0                29                 0                0                 0                  0                2                  9               0                     0                  0                66                  0
+Actual Yellows                   6                 0                 2                0                 9                  0                0                  6               0                     0                  0                 0                 63
+histogram:
+
+---------------------- SVC ----------------------
+(reminder: cross_val_score on the training set: 0.7933437222056964)
+confusion matrix:
+                   Predicted Blues  Predicted Browns  Predicted Greens  Predicted Greys  Predicted Khakis  Predicted Oranges  Predicted Pinks  Predicted Purples  Predicted Reds  Predicted Turquoises  Predicted Violets  Predicted Whites  Predicted Yellows
+Actual Blues                   101                 0                 0                1                 0                  1                0                  0               0                     0                  0                 0                 10
+Actual Browns                    0               161                 0                1                 0                  0                0                  7               0                     0                  0                 0                  2
+Actual Greens                    0                 0                98                0                 0                  1                0                  1               0                     0                  0                 0                  0
+Actual Greys                     0                 1                 0               76                 0                  0                0                  1               7                     0                  0                 0                  1
+Actual Khakis                    7                 0                 0                0               388                  0                0                  0               0                     0                  0                 0                  8
+Actual Oranges                   0                 0                 3                4                 0                 60                0                  3               6                     0                  0                 0                  2
+Actual Pinks                     2                14                 0                0                 0                  0               40                  9               0                     0                  0                 5                  0
+Actual Purples                   0                15                 2                1                 0                  0                0                454               2                     0                  0                 7                  6
+Actual Reds                      0                 0                 0                9                 0                  1                0                  1              97                     0                  0                 0                  1
+Actual Turquoises                5                 0                 0                0                94                  0                0                  0               0                     0                  0                 0                  0
+Actual Violets                   3                 0                 1                0                87                  0                0                  0               0                     0                  0                 0                  1
+Actual Whites                    0                37                 0                1                 0                  0                0                 36               0                     0                  0                32                  0
+Actual Yellows                   3                 0                 0                1                 0                  3                0                  0               1                     0                  0                 0                 78
+histogram:
 
 Process finished with exit code 0

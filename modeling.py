@@ -153,6 +153,7 @@ def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
     conf_mat = confusion_matrix(y_true, y_predict, labels=labels)
 
     # stdout:
+    print("confusion matrix:")
     print(pd.DataFrame(conf_mat, columns=["Predicted " + x for x in labels], index=["Actual " + x for x in labels]))
 
     # plot:
@@ -178,7 +179,6 @@ def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
 
 def report_performance_histogram(y_true, y_predict, cls_name, step_num):
     sample_num = y_true.count()
-    print(sample_num)
     true_data = y_true.value_counts().reindex(labels, fill_value=0).sort_index()
     predict_data = y_predict.value_counts().reindex(labels, fill_value=0).sort_index()
 
@@ -208,10 +208,8 @@ def report_performance_histogram(y_true, y_predict, cls_name, step_num):
 
 
 def report_performance(y_true, y_predict, cls_name, step_num):
-    print("confusion matrix:")
     report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num)
 
-    print("histogram:")
     report_performance_histogram(y_true, y_predict, cls_name, step_num)
 
     # print(classification_report(validation_Y, prediction_y, target_names=labels))
@@ -251,8 +249,7 @@ if __name__ == '__main__':
     #         hyper-parameters of each model (the func return list of models, after choosing the hyper-parameters).
     # models_and_scores = train_models_with_cross_validation_in_order_to_find_hyperparameters(training_X,
     #                                                                                         training_Y)  # todo: uncomment this before submission
-    #
-    # for m, s in models_and_scores:
+    # for m, s in models_and_scores: # todo: delete before submission
     #     print(m, s)
     models_and_scores = [  # todo: delete before submission
         (RandomForestClassifier(criterion='entropy', min_samples_split=4), 0),
