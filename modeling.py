@@ -19,7 +19,7 @@ pd.set_option('display.width', desired_width)
 np.set_printoptions(linewidth=desired_width)
 pd.set_option('display.max_columns', 15)
 
-warnings.filterwarnings('ignore')  # todo: recheck before submission
+warnings.filterwarnings('ignore')  # ignore "UndefinedMetricWarning"
 
 
 ########################################################################################################################
@@ -361,29 +361,19 @@ if __name__ == '__main__':
               "Turquoises", "Violets", "Whites", "Yellows"]
 
     # STEP 1: load the data, split to train/validation/test and save 'original_data'+'prepared_data' (according to HW2).
-    # training, validation, test = prepare_data('ElectionsData.csv')  # todo: uncomment this before submission
-    training, validation, test = read_sets('prepared_data')
+    training, validation, test = prepare_data('ElectionsData.csv')
+    # training, validation, test = read_sets('prepared_data')
     training_X, training_Y = training.drop(['Vote'], axis=1), training['Vote']
     validation_X, validation_Y = validation.drop(['Vote'], axis=1), validation['Vote']
     test_X, test_Y = test.drop(['Vote'], axis=1), test['Vote']
 
     # STEP 2: train different models with cross validation and only on the training set, in order to tune the
     #         hyper-parameters of each model (the func return list of models, after choosing the hyper-parameters).
-    # models_and_scores = train_models_with_cross_validation_in_order_to_find_hyperparameters(training_X,
-    #                                                                                         training_Y)  # todo: uncomment this before submission
-    # for m, s in models_and_scores: # todo: delete before submission
-    #     print(m, s)
-    models_and_scores = [  # todo: delete before submission
-        (RandomForestClassifier(criterion='entropy', min_samples_split=4), 0),
-        (DecisionTreeClassifier(criterion='entropy', min_samples_split=6), 0),
-        (KNeighborsClassifier(n_neighbors=6, weights='distance'), 0),
-        (SVC(kernel='linear', probability=True), 0)]
+    models_and_scores = train_models_with_cross_validation_in_order_to_find_hyperparameters(training_X, training_Y)
 
     # STEP 3: train the models with all the training set (without cross validation), check performance on the validation
     #         set, and choose the best model.
-    # best_model = compare_performance_of_models(models_and_scores, training_X, training_Y, validation_X,
-    #                                  validation_Y)  # todo: uncomment this before submission
-    best_model = RandomForestClassifier(criterion='entropy', min_samples_split=4)  # todo: delete before submission
+    best_model = compare_performance_of_models(models_and_scores, training_X, training_Y, validation_X, validation_Y)
 
     # STEP 4: train the model we chose with the training set and validation set (together), and check performance on the
     #         test set.
