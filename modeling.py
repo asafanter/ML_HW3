@@ -132,19 +132,19 @@ def train_models_with_cross_validation_in_order_to_find_hyperparameters(x, y):
 
 
 ########################################################################################################################
-# STEP 3: train the models with all the training set (without cross validation), and check performance on the
-#         validation set.
+# STEP 3: train the models with all the training set (without cross validation), check performance on the validation
+#         set, and choose the best model.
 ########################################################################################################################
 
 def report_performance_metrics(y_true, y_predict, prediction_proba_y, threshold):
     # accuracy and error:
     accuracy = accuracy_score(y_true, y_predict)
     error = 1 - accuracy
-    print("accuracy (without threshold): {:.3f}%  (error: {:.3f}%)".format(accuracy * 100, error * 100))
+    print("accuracy (without threshold):\t {:.3f}%  (error: {:.3f}%)".format(accuracy * 100, error * 100))
     accuracy_with_threshold = accuracy_score(y_true, prediction_proba_y)
     error_with_threshold = 1 - accuracy_with_threshold
-    print("accuracy (with threshold={}): {:.3f}%  (error: {:.3f}%)".format(threshold, accuracy_with_threshold * 100,
-                                                                           error_with_threshold * 100))
+    print("accuracy (with threshold={}):\t {:.3f}%  (error: {:.3f}%)".format(threshold, accuracy_with_threshold * 100,
+                                                                             error_with_threshold * 100))
 
     print("metrics on each label (without threshold):")
 
@@ -263,7 +263,7 @@ def compare_performance(models_and_scores, training_X, training_Y, validation_X,
 
     max_accuracy, max_model = 0, None
     for clf, training_cv_score in models_and_scores:
-        threshold = 0.4
+        threshold = 0.5
         clf_name = clf.__class__.__name__
 
         clf.fit(training_X, training_Y)
@@ -308,7 +308,6 @@ if __name__ == '__main__':
         (KNeighborsClassifier(n_neighbors=6, weights='distance'), 0),
         (SVC(kernel='linear', probability=True), 0)]
 
-    # STEP 3: train the models with all the training set (without cross validation), and check performance on the
-    #         validation set.
+    # STEP 3: train the models with all the training set (without cross validation), check performance on the validation
+    #         set, and choose the best model.
     best_model = compare_performance(models_and_scores, training_X, training_Y, validation_X, validation_Y)
-    # print(best_model)
