@@ -172,7 +172,7 @@ def report_performance_metrics(y_true, y_predict, prediction_proba_y, threshold)
     return accuracy
 
 
-def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
+def report_performance_confusion_matrix(y_true, y_predict, clf_name, step_num):
     conf_mat = confusion_matrix(y_true, y_predict, labels=labels)
 
     # # stdout:
@@ -186,7 +186,7 @@ def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
     im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     ax.figure.colorbar(im, ax=ax)
     ax.set(xticks=np.arange(cm.shape[1]), yticks=np.arange(cm.shape[0]), xticklabels=classes, yticklabels=classes,
-           title='STEP {0}: confusion matrix of {1}'.format(step_num, cls_name), ylabel='True label',
+           title='STEP {0}: confusion matrix of {1}'.format(step_num, clf_name), ylabel='True label',
            xlabel='Predicted label')
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
     fmt = 'd'
@@ -208,7 +208,7 @@ def report_report_votes_distribution(y_predict):
     return votes_distribution_str
 
 
-def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num):
+def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, clf_name, step_num):
     labels_with_unknown = labels + ['_Unknown']
     sample_num = y_true.count()
     true_data = y_true.value_counts().reindex(labels_with_unknown, fill_value=0).sort_index()
@@ -228,7 +228,7 @@ def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshol
 
     plt.xlabel('Party')
     plt.ylabel('Votes')
-    plt.title('STEP {0}: histogram of {1}'.format(step_num, cls_name))
+    plt.title('STEP {0}: histogram of {1}'.format(step_num, clf_name))
     plt.xticks(index + bar_width, labels_with_unknown)
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
     plt.legend()
@@ -247,12 +247,12 @@ def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshol
     print("distribution of true votes:                        ", report_report_votes_distribution(y_true))
 
 
-def report_performance(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num):
+def report_performance(y_true, y_predict, prediction_proba_y, threshold, clf_name, step_num):
     accuracy = report_performance_metrics(y_true, y_predict, prediction_proba_y, threshold)
 
-    report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num)
+    report_performance_confusion_matrix(y_true, y_predict, clf_name, step_num)
 
-    report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num)
+    report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, clf_name, step_num)
 
     return accuracy
 
@@ -269,12 +269,12 @@ def find_prediction_proba_y(clf, validation_X, threshold):
     return pd.Series(prediction_proba_y)
 
 
-def compare_performance(models_and_scores, training_X, training_Y, validation_X, validation_Y):
+def compare_performance_of_models(models_and_scores, training_X, training_Y, validation_X, validation_Y):
     print('\n_________________ STEP 3: check performance on validation set _________________')
 
+    threshold = 0.5
     max_accuracy, max_model = 0, None
     for clf, training_cv_score in models_and_scores:
-        threshold = 0.5
         clf_name = clf.__class__.__name__
 
         clf.fit(training_X, training_Y)
@@ -282,13 +282,59 @@ def compare_performance(models_and_scores, training_X, training_Y, validation_X,
         prediction_proba_y = find_prediction_proba_y(clf, validation_X, threshold)
 
         print("\n---------------------- {0} ----------------------".format(clf_name))
-        print("(reminder: cross_val_score on the training set: {0})".format(training_cv_score))
         accuracy = report_performance(validation_Y, prediction_y, prediction_proba_y, threshold, clf_name, 3)
 
         if accuracy > max_accuracy:
             max_accuracy, max_model = accuracy, clf
 
     return max_model
+
+
+########################################################################################################################
+# STEP 4: train the model we chose with the training set and validation set (together), and check performance on the
+#         test set.
+########################################################################################################################
+
+def compare_threshold(clf, test_X, test_Y, clf_name, step_num):
+    thresholds = np.around(np.arange(0, 1.05, 0.05), decimals=2)
+    thresholds_accuracy = [accuracy_score(test_Y, find_prediction_proba_y(clf, test_X, t)) for t in thresholds]
+
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111)
+
+    plt.plot([str(t) for t in thresholds], thresholds_accuracy, color='orange', linestyle='-', marker='o')
+    plt.title('STEP {0}: accuracy as function of threshold (model is {1})'.format(step_num, clf_name))
+    plt.xlabel('threshold')
+    plt.ylabel('accuracy')
+    plt.xticks(rotation=45)
+
+    for xy in zip([str(t) for t in thresholds], thresholds_accuracy):
+        t, a = xy[0], round(xy[1], 2)
+        ax.annotate("({0},\n{1})".format(t, a), xy, fontsize=8, ha='center', xytext=(0, 7),
+                    textcoords='offset points')
+
+    plt.show()
+
+
+def performance_of_model_on_test(clf, training_X, training_Y, validation_X, validation_Y, test_X, test_Y):
+    print('\n_________________ STEP 4: check performance on test set _________________')
+
+    training_validation_X = pd.concat([training_X, validation_X], ignore_index=True)
+    training_validation_Y = pd.concat([training_Y, validation_Y], ignore_index=True)
+
+    threshold = 0.5
+    clf_name = clf.__class__.__name__
+
+    clf.fit(training_validation_X, training_validation_Y)
+    prediction_y = pd.Series(clf.predict(test_X))
+    prediction_proba_y = find_prediction_proba_y(clf, test_X, threshold)
+
+    print("\n---------------------- {0} ----------------------".format(clf_name))
+    report_performance(test_Y, prediction_y, prediction_proba_y, threshold, clf_name, 4)
+
+    compare_threshold(clf, test_X, test_Y, clf_name, 4)
+    return
+    # vote_result_to_csv(prediction_y)
 
 
 ########################################################################################################################
@@ -321,6 +367,10 @@ if __name__ == '__main__':
 
     # STEP 3: train the models with all the training set (without cross validation), check performance on the validation
     #         set, and choose the best model.
-    best_model = compare_performance(models_and_scores, training_X, training_Y, validation_X,
-                                     validation_Y)  # todo: uncomment this before submission
+    # best_model = compare_performance_of_models(models_and_scores, training_X, training_Y, validation_X,
+    #                                  validation_Y)  # todo: uncomment this before submission
     best_model = RandomForestClassifier(criterion='entropy', min_samples_split=4)  # todo: delete before submission
+
+    # STEP 4: train the model we chose with the training set and validation set (together), and check performance on the
+    #         test set.
+    performance_of_model_on_test(best_model, training_X, training_Y, validation_X, validation_Y, test_X, test_Y)
