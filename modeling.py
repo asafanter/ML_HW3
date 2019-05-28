@@ -200,6 +200,14 @@ def report_performance_confusion_matrix(y_true, y_predict, cls_name, step_num):
     plt.show()
 
 
+def report_report_votes_distribution(y_predict):
+    votes_distribution = y_predict.value_counts().reindex(labels, fill_value=0).sort_values(ascending=False)
+    votes_distribution = list(zip(votes_distribution.index, votes_distribution))
+    votes_distribution_str = [("{:.<12}{}".format(label + ":", votes)) for (label, votes) in votes_distribution]
+    votes_distribution_str = '\t\t'.join(votes_distribution_str)
+    return votes_distribution_str
+
+
 def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num):
     labels_with_unknown = labels + ['_Unknown']
     sample_num = y_true.count()
@@ -234,6 +242,9 @@ def report_performance_histogram(y_true, y_predict, prediction_proba_y, threshol
 
     plt.tight_layout()
     plt.show()
+
+    print("distribution of predict votes (without threshold): ", report_report_votes_distribution(y_predict))
+    print("distribution of true votes:                        ", report_report_votes_distribution(y_true))
 
 
 def report_performance(y_true, y_predict, prediction_proba_y, threshold, cls_name, step_num):
@@ -310,4 +321,6 @@ if __name__ == '__main__':
 
     # STEP 3: train the models with all the training set (without cross validation), check performance on the validation
     #         set, and choose the best model.
-    best_model = compare_performance(models_and_scores, training_X, training_Y, validation_X, validation_Y)
+    best_model = compare_performance(models_and_scores, training_X, training_Y, validation_X,
+                                     validation_Y)  # todo: uncomment this before submission
+    best_model = RandomForestClassifier(criterion='entropy', min_samples_split=4)  # todo: delete before submission
