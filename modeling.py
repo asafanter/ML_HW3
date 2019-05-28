@@ -316,6 +316,18 @@ def compare_threshold(clf, test_X, test_Y, clf_name, step_num):
     plt.show()
 
 
+def report_prediction_result(prediction_y):
+    # write vote result to csv:
+    prediction_y.to_csv('results/' + 'vote_result.csv', header=['Vote'], index=False)
+
+    # for each party - find most probable voters (threshold = 0!)
+    print("most probable voters for each party:")
+    for l in labels:
+        indexes = prediction_y[prediction_y == l].index
+        indexes = [x + 2 for x in indexes]  # fix line number: include 'Vote' line + start counting from 1 (not from 0)
+        print("\t{} ({} voters):{}".format(l, len(indexes), str(indexes)))
+
+
 def performance_of_model_on_test(clf, training_X, training_Y, validation_X, validation_Y, test_X, test_Y):
     print('\n_________________ STEP 4: check performance on test set _________________')
 
@@ -333,8 +345,10 @@ def performance_of_model_on_test(clf, training_X, training_Y, validation_X, vali
     report_performance(test_Y, prediction_y, prediction_proba_y, threshold, clf_name, 4)
 
     compare_threshold(clf, test_X, test_Y, clf_name, 4)
+
+    report_prediction_result(prediction_y)
+
     return
-    # vote_result_to_csv(prediction_y)
 
 
 ########################################################################################################################
